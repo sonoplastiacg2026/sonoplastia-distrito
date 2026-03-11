@@ -475,6 +475,21 @@
     border-color: rgba(240,165,0,0.35);
     color: #f0a500;
   }
+  @media (max-width: 768px) {
+    .dir-badge {
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.68rem;
+      padding: 0.22rem 0.55rem;
+    }
+    #directorInfo .dir-badge span { display: none; }
+    #directorInfo .dir-badge::before {
+      content: attr(data-short);
+      display: inline;
+    }
+  }
 
   /* MODALS */
   .modal-overlay {
@@ -1626,7 +1641,11 @@ function setDirectorUI() {
     const badge = document.getElementById('directorInfo').querySelector('.dir-badge');
     badge.className = 'dir-badge' + (isCoord ? ' coordinator' : '');
     const prefix = isCoord ? 'Coordenador Distrital · ' : 'Dir. ';
-    document.getElementById('directorName').textContent = prefix + state.director.name + ' · ' + state.director.church;
+    const fullText = prefix + state.director.name + ' · ' + state.director.church;
+    // Versão curta para mobile
+    const shortText = isCoord ? '⭐ ' + state.director.name.split(' ')[0] : '🎙 ' + state.director.name.split(' ')[0];
+    badge.setAttribute('data-short', shortText);
+    document.getElementById('directorName').textContent = fullText;
   }
   renderFiles(); // re-render to show/hide delete/folder buttons
   renderFolders(); // re-render to show delete folder button for coordinators
