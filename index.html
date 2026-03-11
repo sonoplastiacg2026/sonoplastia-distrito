@@ -524,10 +524,15 @@
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 130px;
+    width: 100%;
+    box-sizing: border-box;
   }
   .upload-drop:hover, .upload-drop.drag { border-color: var(--accent); background: var(--accent-glow); }
-  .upload-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
   .upload-drop svg { width: 36px; height: 36px; color: var(--accent); opacity: 0.6; margin-bottom: 0.75rem; }
   .upload-drop p { color: var(--text2); font-size: 0.85rem; }
   .upload-drop span { color: var(--accent); font-weight: 600; }
@@ -1100,6 +1105,14 @@ async function loadContent(folderId = null) {
 // ====================================================
 // RENDER FOLDERS
 // ====================================================
+function folderMeta(f) {
+  const parts = [];
+  if (f.fileCount > 0) parts.push(f.fileCount + ' arquivo(s)');
+  if (f.subFolderCount > 0) parts.push(f.subFolderCount + ' subpasta(s)');
+  if (parts.length === 0) parts.push('Vazio');
+  if (f.createdBy) parts.push(escHtml(f.createdBy));
+  return parts.join(' · ');
+}
 function renderFolders() {
   const grid = document.getElementById('folderGrid');
   const sec = document.getElementById('foldersSection');
@@ -1112,7 +1125,7 @@ function renderFolders() {
         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
       </svg>
       <div class="folder-name">${escHtml(f.name)}</div>
-      <div class="folder-meta">${f.fileCount || 0} arquivo(s) · ${escHtml(f.createdBy || '')}</div>
+      <div class="folder-meta">${folderMeta(f)}</div>
     </div>
   `).join('');
 }
@@ -1200,6 +1213,18 @@ function navigateTo(view) {
     updateBreadcrumb();
     document.getElementById('currentSectionTitle').textContent = 'Todos os Arquivos';
     updateSidebarActive('nav-root');
+  } else if (view === 'recentes') {
+    updateSidebarActive('nav-recentes');
+    document.getElementById('currentSectionTitle').textContent = 'Recentes';
+    // Mostra os 10 arquivos mais recentes de todas as pastas
+    const sorted = [...state.allFiles].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+    state.files = sorted;
+    document.getElementById('foldersSection').style.display = 'none';
+    renderFiles();
+    updateBreadcrumb();
+  } else if (view === 'search') {
+    updateSidebarActive('nav-search');
+    document.getElementById('searchInput').focus();
   }
 }
 
