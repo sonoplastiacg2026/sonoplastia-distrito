@@ -311,15 +311,15 @@
   .folder-card:hover::before { opacity: 1; }
   .folder-delete-btn {
     position: absolute; top: 8px; right: 8px;
-    width: 26px; height: 26px;
-    background: rgba(255,75,110,0.15); border: 1px solid rgba(255,75,110,0.25);
+    width: 28px; height: 28px;
+    background: rgba(255,75,110,0.18); border: 1px solid rgba(255,75,110,0.35);
     border-radius: 6px; cursor: pointer; color: var(--danger);
     display: flex; align-items: center; justify-content: center;
     opacity: 0; transition: all 0.15s;
   }
-  .folder-delete-btn svg { width: 13px; height: 13px; }
+  .folder-delete-btn svg { width: 14px; height: 14px; }
   .folder-card:hover .folder-delete-btn { opacity: 1; }
-  .folder-delete-btn:hover { background: rgba(255,75,110,0.3); }
+  .folder-delete-btn:hover { background: rgba(255,75,110,0.4); transform: scale(1.1); }
   .folder-icon {
     width: 42px; height: 36px; margin-bottom: 0.75rem;
     color: var(--accent); opacity: 0.85;
@@ -626,15 +626,35 @@
   .empty-state p { font-size: 0.85rem; }
 
   /* Preview modal special */
-  .preview-modal { width: min(800px, 95vw); }
+  .preview-modal { width: min(900px, 96vw); }
   .preview-frame {
     width: 100%; border-radius: var(--r2);
     background: #000; border: 1px solid var(--border);
-    min-height: 400px; display: flex; align-items: center; justify-content: center;
+    min-height: 200px; display: flex; align-items: center; justify-content: center;
     overflow: hidden;
   }
-  .preview-frame img { max-width: 100%; max-height: 70vh; object-fit: contain; }
-  .preview-frame iframe { width: 100%; height: 65vh; border: none; }
+  .preview-frame img { max-width: 100%; max-height: 72vh; object-fit: contain; display: block; }
+  .preview-frame iframe { width: 100%; height: 66vh; border: none; }
+  .preview-frame video {
+    width: 100%; max-height: 72vh;
+    outline: none; display: block;
+    background: #000;
+  }
+  .preview-frame audio {
+    width: 100%; padding: 2rem 1.5rem;
+    accent-color: var(--accent);
+  }
+  .preview-no-support {
+    padding: 3rem 2rem; text-align: center; color: var(--text3);
+  }
+  .preview-no-support .big-icon {
+    font-size: 3.5rem; margin-bottom: 1rem; display: block;
+  }
+  .preview-no-support p { font-size: 0.9rem; color: var(--text2); margin-bottom: 1.5rem; }
+  @media (max-width: 768px) {
+    .preview-modal { width: 100vw !important; max-height: 95vh !important; }
+    .preview-frame video { max-height: 55vw; }
+  }
 
   /* SETUP NOTICE */
   .setup-notice {
@@ -1404,10 +1424,9 @@ function renderFolders() {
       <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
       </svg>
-      ${state.director?.role === 'coordinator' ? `
-        <button class="folder-delete-btn" title="Excluir pasta" onclick="event.stopPropagation(); deleteFolderAction('${f.id}', '${escHtml(f.name)}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-        </button>` : ''}
+      <button class="folder-delete-btn" title="Excluir pasta" onclick="event.stopPropagation(); deleteFolderAction('${f.id}', '${escHtml(f.name)}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
       <div class="folder-name">${escHtml(f.name)}</div>
       <div class="folder-meta">${folderMeta(f)}</div>
     </div>
@@ -1638,6 +1657,7 @@ async function loginDirector() {
 function logout() {
   state.director = null;
   sessionStorage.removeItem('director');
+  document.body.classList.remove('is-coordinator');
   setDirectorUI();
   toast('Sessão encerrada', 'success');
 }
@@ -1653,6 +1673,7 @@ function setDirectorUI() {
   document.getElementById('adminSection').style.display = isDir ? '' : 'none';
   if (isDir) {
     const isCoord = state.director.role === 'coordinator';
+    document.body.classList.toggle('is-coordinator', isCoord);
     const badge = document.getElementById('directorInfo').querySelector('.dir-badge');
     badge.className = 'dir-badge' + (isCoord ? ' coordinator' : '');
     const prefix = isCoord ? 'Coordenador Distrital · ' : 'Dir. ';
@@ -1835,22 +1856,80 @@ async function previewFile(id) {
     ${file.description ? `<span>💬 ${escHtml(file.description)}</span>` : ''}
   `;
 
+  // Limpa player anterior se houver (pausa vídeo/áudio ao fechar)
+  frame.innerHTML = '';
+
   const url = file.viewUrl || file.downloadUrl || '';
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  // Mapear extensão para mimeType correto
+  const mimeMap = {
+    mp4:'video/mp4', webm:'video/webm', mov:'video/mp4', avi:'video/mp4',
+    mkv:'video/mp4', mp3:'audio/mpeg', wav:'audio/wav', ogg:'audio/ogg',
+    m4a:'audio/mp4', flac:'audio/ogg', aac:'audio/aac'
+  };
+
   if (file.type === 'img' && url) {
     frame.innerHTML = `<img src="${url}" alt="${escHtml(file.name)}">`;
+
   } else if (file.type === 'pdf' && url) {
     frame.innerHTML = `<iframe src="${url}" title="${escHtml(file.name)}"></iframe>`;
+
+  } else if (file.type === 'vid' && url) {
+    // Player de vídeo nativo — usa URL de visualização do Google Drive
+    // Formato: https://drive.google.com/file/d/FILE_ID/preview (embed) ou /view
+    const driveId = extractDriveId(url);
+    if (driveId) {
+      // Embed do Drive funciona para vídeos sem precisar de download direto
+      frame.innerHTML = `<iframe 
+        src="https://drive.google.com/file/d/${driveId}/preview" 
+        title="${escHtml(file.name)}"
+        allow="autoplay"
+        allowfullscreen
+        style="width:100%;height:66vh;border:none;">
+      </iframe>`;
+    } else {
+      const mime = mimeMap[ext] || 'video/mp4';
+      frame.innerHTML = `<video controls autoplay>
+        <source src="${url}" type="${mime}">
+        Seu navegador não suporta reprodução de vídeo.
+      </video>`;
+    }
+
+  } else if (file.type === 'aud' && url) {
+    const driveId = extractDriveId(url);
+    if (driveId) {
+      frame.innerHTML = `<iframe 
+        src="https://drive.google.com/file/d/${driveId}/preview" 
+        title="${escHtml(file.name)}"
+        style="width:100%;height:120px;border:none;">
+      </iframe>`;
+    } else {
+      const mime = mimeMap[ext] || 'audio/mpeg';
+      frame.innerHTML = `<audio controls style="width:100%;padding:2rem 1.5rem">
+        <source src="${url}" type="${mime}">
+      </audio>`;
+    }
+
   } else {
+    const icons = { doc:'📄', xls:'📊', ppt:'📊', zip:'🗜️', apk:'📦', vid:'🎬', aud:'🎵' };
+    const icon = icons[file.type] || '📁';
     frame.innerHTML = `
-      <div style="text-align:center; padding:2rem; color:var(--text3)">
-        <div class="file-type-icon ft-${file.type}" style="margin:0 auto 1rem; width:56px;height:56px;font-size:0.85rem">${file.type.toUpperCase()}</div>
-        <p style="color:var(--text2); margin-bottom:0.5rem">${escHtml(file.name)}</p>
-        <p style="font-size:0.8rem">Clique em Baixar para salvar este arquivo</p>
+      <div class="preview-no-support">
+        <span class="big-icon">${icon}</span>
+        <p>${escHtml(file.name)}</p>
+        <p style="font-size:0.8rem">Este tipo de arquivo não pode ser visualizado inline.<br>Faça o download para abrir.</p>
       </div>`;
   }
 
   document.getElementById('previewDownloadBtn').onclick = () => downloadFile(id, file.name);
   openModal('previewModal');
+}
+
+// Extrai o ID do arquivo do Google Drive a partir de uma URL
+function extractDriveId(url) {
+  const m = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]{20,})/);
+  return m ? m[1] : null;
 }
 
 function downloadFile(id, name) {
@@ -1908,7 +1987,14 @@ function showLoading(v) {
 }
 
 function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeModal(id) {
+  if (id === 'previewModal') {
+    const frame = document.getElementById('previewFrame');
+    frame.querySelectorAll('video, audio').forEach(m => { try { m.pause(); m.src = ''; } catch(e){} });
+    frame.innerHTML = '';
+  }
+  document.getElementById(id).classList.remove('open');
+}
 function openLoginModal() { openModal('loginModal'); }
 
 document.querySelectorAll('.modal-overlay').forEach(m => {
