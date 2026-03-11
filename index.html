@@ -733,7 +733,7 @@
       </div>
       <div class="stat-card">
         <div class="stat-label">Último envio</div>
-        <div class="stat-value" style="font-size:0.9rem; padding-top:0.4rem" id="statLast">—</div>
+        <div class="stat-value" style="font-size:0.75rem; padding-top:0.4rem; line-height:1.4; word-break:break-word; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;" id="statLast">—</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Diretores</div>
@@ -1187,7 +1187,7 @@ function sortFiles(v) { state.sortBy = v; renderFiles(); }
 // ====================================================
 function renderStats(s) {
   document.getElementById('statFiles').textContent = s.files || 0;
-  document.getElementById('statFolders').textContent = s.folders || 0;
+  document.getElementById('statFolders').textContent = state.folders.length; // só pastas da view atual
   document.getElementById('statLast').textContent = s.lastUpload || '—';
   document.getElementById('statDirs').textContent = s.directors || '—';
 }
