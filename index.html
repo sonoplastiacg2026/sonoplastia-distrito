@@ -309,6 +309,17 @@
     box-shadow: 0 8px 24px rgba(0,0,0,0.3);
   }
   .folder-card:hover::before { opacity: 1; }
+  .folder-delete-btn {
+    position: absolute; top: 8px; right: 8px;
+    width: 26px; height: 26px;
+    background: rgba(255,75,110,0.15); border: 1px solid rgba(255,75,110,0.25);
+    border-radius: 6px; cursor: pointer; color: var(--danger);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: all 0.15s;
+  }
+  .folder-delete-btn svg { width: 13px; height: 13px; }
+  .folder-card:hover .folder-delete-btn { opacity: 1; }
+  .folder-delete-btn:hover { background: rgba(255,75,110,0.3); }
   .folder-icon {
     width: 42px; height: 36px; margin-bottom: 0.75rem;
     color: var(--accent); opacity: 0.85;
@@ -459,6 +470,11 @@
     padding: 0.3rem 0.9rem; font-size: 0.78rem; font-weight: 600;
   }
   .dir-badge svg { width: 13px; height: 13px; }
+  .dir-badge.coordinator {
+    background: rgba(240,165,0,0.12);
+    border-color: rgba(240,165,0,0.35);
+    color: #f0a500;
+  }
 
   /* MODALS */
   .modal-overlay {
@@ -632,13 +648,156 @@
   .stat-value { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text); }
   .stat-accent { color: var(--accent); }
 
-  /* Responsive */
+  /* ===================== MOBILE ===================== */
+  .mobile-nav { display: none; }
+  .fab { display: none; }
+  .mobile-header-search { display: none; }
+
   @media (max-width: 768px) {
+    /* Hide desktop elements */
     .sidebar { display: none; }
-    main { padding: 1rem; }
     .header-wave { display: none; }
-    #searchInput { width: 150px; }
-    #searchInput:focus { width: 190px; }
+    .search-wrap { display: none; }
+    .header-title span:last-child { font-size: 0.65rem; }
+    header { padding: 0 1rem; height: 60px; gap: 0.75rem; }
+    .logo-mark { width: 36px; height: 36px; }
+    .header-title span:first-child { font-size: 0.88rem; }
+    #loginBtn { padding: 0.4rem 0.75rem; font-size: 0.78rem; }
+    #loginBtn svg { display: none; }
+    #directorInfo .dir-badge { font-size: 0.72rem; padding: 0.25rem 0.6rem; }
+    #directorInfo .dir-badge svg { display: none; }
+    #logoutBtn { padding: 0.35rem 0.65rem; font-size: 0.75rem; }
+
+    /* Main layout */
+    .layout { flex-direction: column; }
+    main { padding: 1rem 0.9rem 100px; }
+
+    /* Stats - 2 columns on mobile */
+    .stats-row { grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.25rem; }
+    .stat-card { padding: 0.75rem 0.85rem; }
+    .stat-value { font-size: 1.3rem; }
+    .stat-label { font-size: 0.65rem; }
+
+    /* Folders - 2 cols */
+    .folder-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .folder-card { padding: 0.85rem 0.75rem; }
+    .folder-icon { width: 32px; height: 28px; margin-bottom: 0.5rem; }
+    .folder-name { font-size: 0.8rem; }
+    .folder-meta { font-size: 0.67rem; }
+
+    /* Files - 2 cols on mobile */
+    .file-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .file-preview { height: 90px; }
+    .file-name { font-size: 0.78rem; }
+    .file-meta { font-size: 0.67rem; }
+    .file-uploader { font-size: 0.67rem; }
+    .avatar-sm { width: 15px; height: 15px; font-size: 0.45rem; }
+
+    /* Toolbar */
+    .toolbar { flex-direction: column; align-items: flex-start; gap: 0.6rem; margin-bottom: 1.25rem; }
+    .toolbar-right { width: 100%; justify-content: space-between; }
+    #uploadBtn { display: none !important; } /* uses FAB instead */
+
+    /* Breadcrumb */
+    .breadcrumb { font-size: 0.75rem; margin-bottom: 1rem; }
+
+    /* Section headers */
+    .section-title { font-size: 0.95rem; }
+
+    /* Mobile search bar below header */
+    .mobile-header-search {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 0.9rem;
+      position: sticky; top: 60px; z-index: 90;
+    }
+    .mobile-search-inner {
+      flex: 1; position: relative;
+    }
+    .mobile-search-inner svg {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      width: 14px; height: 14px; color: var(--text3); pointer-events: none;
+    }
+    .mobile-search-inner input {
+      width: 100%; background: var(--bg3);
+      border: 1px solid var(--border); border-radius: 50px;
+      padding: 0.5rem 2.4rem 0.5rem 2rem;
+      color: var(--text); font-family: inherit; font-size: 0.85rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .mobile-search-inner input:focus { border-color: var(--accent); }
+    .mobile-search-inner input::placeholder { color: var(--text3); }
+    .mobile-search-btn {
+      position: absolute; right: 7px; top: 50%; transform: translateY(-50%) scale(0);
+      width: 26px; height: 26px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none; border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; opacity: 0; pointer-events: none;
+    }
+    .mobile-search-btn.visible { transform: translateY(-50%) scale(1); opacity: 1; pointer-events: all; }
+    .mobile-search-btn svg { width: 12px; height: 12px; color: #070b12; }
+
+    /* FAB - Floating Action Button */
+    .fab {
+      display: flex;
+      position: fixed; bottom: 80px; right: 1.25rem; z-index: 200;
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 50%; border: none; cursor: pointer;
+      align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,210,180,0.4);
+      transition: all 0.2s;
+    }
+    .fab:active { transform: scale(0.93); }
+    .fab svg { width: 22px; height: 22px; color: #070b12; }
+    .fab-hidden { display: none !important; }
+
+    /* Bottom nav */
+    .mobile-nav {
+      display: flex;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(10,15,24,0.97);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      padding: 0 0.5rem env(safe-area-inset-bottom);
+      height: 64px;
+    }
+    .mobile-nav-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 3px; cursor: pointer; color: var(--text3);
+      font-size: 0.62rem; font-weight: 600; letter-spacing: 0.02em;
+      transition: color 0.15s; padding: 0.25rem 0;
+      border: none; background: none; font-family: inherit;
+    }
+    .mobile-nav-item svg { width: 20px; height: 20px; }
+    .mobile-nav-item.active { color: var(--accent); }
+    .mobile-nav-item .mob-dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--accent);
+      margin-top: 1px; opacity: 0;
+    }
+    .mobile-nav-item.active .mob-dot { opacity: 1; }
+
+    /* Modal full-screen on mobile */
+    .modal {
+      width: 100vw !important;
+      max-height: 92vh;
+      border-radius: 20px 20px 0 0 !important;
+      margin-top: auto;
+      margin-bottom: 0;
+    }
+    .modal-overlay { align-items: flex-end; }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal { transform: translateY(40px) scale(1) !important; }
+
+    /* Setup notice */
+    .setup-notice { padding: 0.75rem 1rem; }
+    .setup-notice p { font-size: 0.75rem; }
   }
 </style>
 </head>
@@ -681,6 +840,7 @@
           <circle cx="12" cy="7" r="4"/>
         </svg>
         <span id="directorName">Diretor</span>
+        <span id="directorRole"></span>
       </div>
     </div>
 
@@ -691,6 +851,26 @@
     <button class="btn btn-danger btn-sm" id="logoutBtn" style="display:none" onclick="logout()">Sair</button>
   </div>
 </header>
+
+<!-- MOBILE SEARCH BAR -->
+<div class="mobile-header-search" id="mobileSearchBar">
+  <div class="mobile-search-inner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" id="mobileSearchInput" placeholder="Buscar em todas as pastas..."
+      onkeydown="if(event.key==='Enter') triggerMobileSearch()"
+      oninput="
+        document.querySelector('.mobile-search-btn').classList.toggle('visible', this.value.trim().length > 0);
+        if(!this.value.trim()) clearSearch();
+      ">
+    <button class="mobile-search-btn" onclick="triggerMobileSearch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+    </button>
+  </div>
+</div>
 
 <!-- LAYOUT -->
 <div class="layout">
@@ -830,6 +1010,56 @@
 
 <!-- TOAST -->
 <div id="toast"></div>
+
+<!-- FAB (mobile upload) -->
+<button class="fab fab-hidden" id="fabBtn" onclick="openUploadModal()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="17 8 12 3 7 8"/>
+    <line x1="12" y1="3" x2="12" y2="15"/>
+  </svg>
+</button>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav">
+  <button class="mobile-nav-item active" id="mob-inicio" onclick="mobileNav('inicio')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    Início
+    <span class="mob-dot"></span>
+  </button>
+  <button class="mobile-nav-item" id="mob-recentes" onclick="mobileNav('recentes')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+    Recentes
+    <span class="mob-dot"></span>
+  </button>
+  <button class="mobile-nav-item" id="mob-buscar" onclick="mobileNav('buscar')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    Buscar
+    <span class="mob-dot"></span>
+  </button>
+  <button class="mobile-nav-item" id="mob-pasta" onclick="mobileNav('pasta')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+    </svg>
+    Pastas
+    <span class="mob-dot"></span>
+  </button>
+  <button class="mobile-nav-item" id="mob-conta" onclick="mobileNav('conta')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    Conta
+    <span class="mob-dot"></span>
+  </button>
+</nav>
 
 <!-- ===================== MODALS ===================== -->
 
@@ -997,6 +1227,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const stored = sessionStorage.getItem('director');
   if (stored) {
     state.director = JSON.parse(stored);
+    state.directorCode = sessionStorage.getItem('directorCode') || '';
     setDirectorUI();
   }
   if (window.APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
@@ -1143,6 +1374,10 @@ function renderFolders() {
       <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
       </svg>
+      ${state.director?.role === 'coordinator' ? `
+        <button class="folder-delete-btn" title="Excluir pasta" onclick="event.stopPropagation(); deleteFolderAction('${f.id}', '${escHtml(f.name)}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>` : ''}
       <div class="folder-name">${escHtml(f.name)}</div>
       <div class="folder-meta">${folderMeta(f)}</div>
     </div>
@@ -1357,7 +1592,9 @@ async function loginDirector() {
     const res = await api('login', { code });
     if (res.success) {
       state.director = res.director;
+      state.directorCode = code;
       sessionStorage.setItem('director', JSON.stringify(res.director));
+      sessionStorage.setItem('directorCode', code);
       setDirectorUI();
       closeModal('loginModal');
       toast(`Bem-vindo(a), ${res.director.name}!`, 'success');
@@ -1384,8 +1621,15 @@ function setDirectorUI() {
   document.getElementById('uploadNavBtn').style.display = isDir ? '' : 'none';
   document.getElementById('folderNavBtn').style.display = isDir ? '' : 'none';
   document.getElementById('adminSection').style.display = isDir ? '' : 'none';
-  if (isDir) document.getElementById('directorName').textContent = `${state.director.name} · ${state.director.church}`;
-  renderFiles(); // re-render to show/hide delete buttons
+  if (isDir) {
+    const isCoord = state.director.role === 'coordinator';
+    const badge = document.getElementById('directorInfo').querySelector('.dir-badge');
+    badge.className = 'dir-badge' + (isCoord ? ' coordinator' : '');
+    const prefix = isCoord ? 'Coordenador Distrital · ' : 'Dir. ';
+    document.getElementById('directorName').textContent = prefix + state.director.name + ' · ' + state.director.church;
+  }
+  renderFiles(); // re-render to show/hide delete/folder buttons
+  renderFolders(); // re-render to show delete folder button for coordinators
 }
 
 // ====================================================
@@ -1585,6 +1829,19 @@ function downloadFile(id, name) {
   }
 }
 
+async function deleteFolderAction(id, name) {
+  if (!state.director || state.director.role !== 'coordinator') {
+    toast('Apenas Coordenadores Distritais podem excluir pastas.', 'error'); return;
+  }
+  if (!confirm(`Excluir a pasta "${name}" e TODO seu conteúdo?
+Esta ação não pode ser desfeita.`)) return;
+  try {
+    const res = await apiPost('deleteFolder', { folderId: id, code: state.directorCode });
+    if (res.success) { toast(`Pasta "${name}" excluída.`, 'success'); loadContent(state.currentFolder); }
+    else toast(res.message || 'Erro ao excluir pasta', 'error');
+  } catch(e) { toast('Erro de conexão', 'error'); }
+}
+
 async function deleteFile(id) {
   if (!confirm('Excluir este arquivo?')) return;
   try {
@@ -1636,6 +1893,71 @@ function toast(msg, type = 'success') {
   t.appendChild(el);
   setTimeout(() => el.remove(), 3500);
 }
+
+// ====================================================
+// MOBILE NAV & FAB
+// ====================================================
+function isMobile() { return window.innerWidth <= 768; }
+
+function mobileNav(tab) {
+  document.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
+  const el = document.getElementById('mob-' + tab);
+  if (el) el.classList.add('active');
+
+  const searchBar = document.getElementById('mobileSearchBar');
+
+  if (tab === 'inicio') {
+    searchBar.style.display = '';
+    folderPath.length = 0; state.currentFolder = null;
+    loadContent(); updateBreadcrumb();
+    document.getElementById('currentSectionTitle').textContent = 'Todos os Arquivos';
+  } else if (tab === 'recentes') {
+    searchBar.style.display = 'none';
+    const sorted = [...state.allFiles].sort((a,b) => new Date(b.date)-new Date(a.date)).slice(0,20);
+    state.files = sorted;
+    document.getElementById('foldersSection').style.display = 'none';
+    document.getElementById('currentSectionTitle').textContent = 'Recentes';
+    renderFiles();
+  } else if (tab === 'buscar') {
+    searchBar.style.display = '';
+    document.getElementById('mobileSearchInput').focus();
+  } else if (tab === 'pasta') {
+    searchBar.style.display = 'none';
+    // Volta à raiz mostrando só pastas
+    folderPath.length = 0; state.currentFolder = null;
+    loadContent();
+    document.getElementById('currentSectionTitle').textContent = 'Pastas';
+  } else if (tab === 'conta') {
+    searchBar.style.display = 'none';
+    if (state.director) { if(confirm('Deseja sair da conta ' + state.director.name + '?')) logout(); }
+    else openLoginModal();
+    // volta ao início
+    document.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
+    document.getElementById('mob-inicio').classList.add('active');
+  }
+}
+
+function triggerMobileSearch() {
+  const query = document.getElementById('mobileSearchInput').value.trim();
+  if (!query) { clearSearch(); return; }
+  // Sync com searchInput do desktop e dispara busca
+  document.getElementById('searchInput').value = query;
+  triggerSearch();
+}
+
+// Mostra FAB apenas para diretores logados no mobile
+function updateFab() {
+  const fab = document.getElementById('fabBtn');
+  if (!fab) return;
+  if (isMobile() && state.director) fab.classList.remove('fab-hidden');
+  else fab.classList.add('fab-hidden');
+}
+
+// Patch setDirectorUI to also update FAB
+const _origSetDirectorUI = setDirectorUI;
+setDirectorUI = function() { _origSetDirectorUI(); updateFab(); };
+
+window.addEventListener('resize', updateFab);
 
 function escHtml(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function formatDate(d) { if (!d) return '—'; try { return new Date(d).toLocaleDateString('pt-BR'); } catch(e) { return d; } }
