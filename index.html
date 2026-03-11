@@ -846,14 +846,14 @@
       </button>
     </div>
 
-    <div class="upload-drop" id="uploadDrop" onclick="document.getElementById('fileInput').click()"
-      ondragover="e=>{e.preventDefault();this.classList.add('drag')}" 
+    <label class="upload-drop" id="uploadDrop" for="fileInput"
+      ondragover="event.preventDefault();this.classList.add('drag')" 
       ondragleave="this.classList.remove('drag')"
       ondrop="handleDropFiles(event)">
-      <input type="file" id="fileInput" multiple onchange="handleFileSelect(this)">
+      <input type="file" id="fileInput" multiple onchange="handleFileSelect(this)" style="display:none">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
       <p>Arraste arquivos aqui ou <span>clique para selecionar</span></p>
-    </div>
+    </label>
 
     <ul class="file-queue" id="fileQueue"></ul>
 
@@ -1357,35 +1357,76 @@ function removePendingFile(i) {
 
 async function uploadFiles() {
   if (!state.pendingFiles.length) { toast('Selecione ao menos um arquivo', 'error'); return; }
-  const folder = document.getElementById('targetFolder').value;
-  const desc = document.getElementById('fileDescription').value;
-  document.getElementById('uploadProgress').style.display = '';
+
+  // Aviso para arquivos grandes (Apps Script tem limite ~50MB por requisição)
+  const tooBig = state.pendingFiles.filter(f => f.size > 50 * 1024 * 1024);
+  if (tooBig.length) {
+    toast(`⚠️ "${tooBig[0].name}" ultrapassa 50MB — o Google Apps Script pode rejeitar. Tente arquivos menores.`, 'error');
+    return;
+  }
+
+  const folder  = document.getElementById('targetFolder').value;
+  const desc    = document.getElementById('fileDescription').value;
+  const progWrap = document.getElementById('uploadProgress');
+  const progFill = document.getElementById('progressFill');
+  const progLabel = progWrap.querySelector('.form-label');
+  progWrap.style.display = '';
+  progFill.style.width = '0%';
+
+  // Desabilita botão durante envio
+  const btn = document.querySelector('#uploadModal .btn-primary');
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
 
   let uploaded = 0;
+  const total = state.pendingFiles.length;
+
   for (const file of state.pendingFiles) {
-    const b64 = await toBase64(file);
-    document.getElementById('progressFill').style.width = ((uploaded / state.pendingFiles.length) * 100) + '%';
-    await apiPost('uploadFile', {
-      name: file.name,
-      data: b64,
-      mimeType: file.type,
-      folderId: folder || null,
-      description: desc,
-      directorName: state.director.name,
-      church: state.director.church,
-      date: new Date().toISOString().split('T')[0]
-    });
-    uploaded++;
+    try {
+      progLabel.textContent = `Convertendo "${file.name}"...`;
+      progFill.style.width = ((uploaded / total) * 100) + '%';
+
+      const b64 = await toBase64(file);
+
+      progLabel.textContent = `Enviando "${file.name}" (${formatSize(file.size)})...`;
+      // Anima barra enquanto aguarda resposta do servidor
+      let fake = (uploaded / total) * 100;
+      const fakeTimer = setInterval(() => {
+        fake = Math.min(fake + 0.5, ((uploaded + 0.9) / total) * 100);
+        progFill.style.width = fake + '%';
+      }, 200);
+
+      await apiPost('uploadFile', {
+        name: file.name, data: b64, mimeType: file.type,
+        folderId: folder || null, description: desc,
+        directorName: state.director.name, church: state.director.church,
+        date: new Date().toISOString().split('T')[0]
+      });
+
+      clearInterval(fakeTimer);
+      uploaded++;
+      progFill.style.width = ((uploaded / total) * 100) + '%';
+    } catch(e) {
+      toast(`Erro ao enviar "${file.name}". Verifique o tamanho ou conexão.`, 'error');
+      btn.disabled = false; btn.style.opacity = '';
+      progWrap.style.display = 'none';
+      return;
+    }
   }
-  document.getElementById('progressFill').style.width = '100%';
+
+  progFill.style.width = '100%';
+  progLabel.textContent = 'Concluído!';
+  btn.disabled = false; btn.style.opacity = '';
+
   setTimeout(() => {
     closeModal('uploadModal');
     state.pendingFiles = [];
     document.getElementById('fileQueue').innerHTML = '';
-    document.getElementById('uploadProgress').style.display = 'none';
+    progWrap.style.display = 'none';
+    progFill.style.width = '0%';
     loadContent(state.currentFolder);
     toast(`${uploaded} arquivo(s) enviado(s) com sucesso!`, 'success');
-  }, 500);
+  }, 600);
 }
 
 function toBase64(file) {
