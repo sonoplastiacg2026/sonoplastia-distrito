@@ -975,6 +975,9 @@ document.addEventListener('DOMContentLoaded', () => {
     state.director = JSON.parse(stored);
     setDirectorUI();
   }
+  if (window.APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+    document.getElementById('setupNotice').style.display = 'none';
+  }
   loadContent();
   buildSidebarFolders();
 });
