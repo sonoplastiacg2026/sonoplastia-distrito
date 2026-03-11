@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ministério de Sonoplastia — Distrito Caldeirão Grande</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070b12;
+    --bg2: #0e1520;
+    --bg3: #151e2e;
+    --surface: #1a2540;
+    --surface2: #1f2d4a;
+    --border: rgba(0,210,180,0.12);
+    --border2: rgba(0,210,180,0.25);
+    --accent: #00d2b4;
+    --accent2: #00a8f0;
+    --accent-glow: rgba(0,210,180,0.15);
+    --accent2-glow: rgba(0,168,240,0.15);
+    --text: #e8edf5;
+    --text2: #8b99b8;
+    --text3: #4e5e7a;
+    --danger: #ff4b6e;
+    --warn: #f0a500;
+    --success: #00d2b4;
+    --r: 12px;
+    --r2: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG grain texture */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:0; opacity:.4;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7,11,18,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 72px;
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .logo-mark {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 20px rgba(0,210,180,0.3);
+  }
+  .logo-mark svg { width: 22px; height: 22px; }
+  .header-title {
+    flex: 1;
+    display: flex; flex-direction: column; gap: 1px;
+  }
+  .header-title span:first-child {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 1rem;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .header-title span:last-child {
+    font-size: 0.72rem; color: var(--accent);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  /* Wave decoration in header */
+  .header-wave {
+    flex: 1; max-width: 220px;
+    height: 32px; opacity: 0.35;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .header-wave span {
+    display: block; width: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    animation: wave 1.4s ease-in-out infinite;
+  }
+  @keyframes wave {
+    0%,100% { height: 4px; } 50% { height: var(--h); }
+  }
+
+  .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+  .search-wrap {
+    position: relative;
+  }
+  .search-wrap svg {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--text3); pointer-events: none;
+    width: 15px; height: 15px;
+  }
+  #searchInput {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 0.5rem 1rem 0.5rem 2.2rem;
+    color: var(--text); font-family: inherit; font-size: 0.85rem;
+    width: 220px;
+    transition: all 0.25s;
+    outline: none;
+  }
+  #searchInput:focus {
+    border-color: var(--border2);
+    background: var(--bg2);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+    width: 280px;
+  }
+  #searchInput::placeholder { color: var(--text3); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    padding: 0.5rem 1rem; border-radius: 8px;
+    font-family: inherit; font-size: 0.83rem; font-weight: 600;
+    cursor: pointer; border: none; transition: all 0.2s;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #070b12;
+    box-shadow: 0 4px 16px rgba(0,210,180,0.25);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(0,210,180,0.35); }
+  .btn-ghost {
+    background: var(--surface); color: var(--text2);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--border2); }
+  .btn-danger { background: rgba(255,75,110,0.15); color: var(--danger); border: 1px solid rgba(255,75,110,0.2); }
+  .btn-danger:hover { background: rgba(255,75,110,0.25); }
+  .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
+
+  /* LAYOUT */
+  .layout {
+    display: flex; min-height: calc(100vh - 72px);
+    position: relative; z-index: 1;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px; flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+    display: flex; flex-direction: column; gap: 0.25rem;
+    position: sticky; top: 72px;
+    height: calc(100vh - 72px);
+    overflow-y: auto;
+  }
+  .sidebar-label {
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text3);
+    padding: 0.75rem 0.5rem 0.35rem;
+    margin-top: 0.5rem;
+  }
+  .sidebar-label:first-child { margin-top: 0; }
+  .nav-item {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--r2); cursor: pointer;
+    color: var(--text2); font-size: 0.85rem;
+    transition: all 0.18s; border: 1px solid transparent;
+    user-select: none;
+  }
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .nav-item:hover { background: var(--surface); color: var(--text); }
+  .nav-item.active {
+    background: var(--accent-glow);
+    color: var(--accent);
+    border-color: var(--border);
+  }
+  .nav-item .badge {
+    margin-left: auto;
+    background: var(--surface2);
+    color: var(--text3);
+    font-size: 0.68rem; font-weight: 600;
+    padding: 1px 6px; border-radius: 50px;
+  }
+  .nav-item.active .badge { background: rgba(0,210,180,0.15); color: var(--accent); }
+
+  /* folder tree sub-items */
+  .folder-tree { padding-left: 1rem; }
+  .folder-tree .nav-item { font-size: 0.82rem; }
+
+  /* MAIN */
+  main {
+    flex: 1; padding: 2rem;
+    min-width: 0;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.82rem; color: var(--text3);
+    margin-bottom: 1.5rem;
+  }
+  .breadcrumb a, .breadcrumb span {
+    cursor: pointer; transition: color 0.15s;
+  }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb .sep { color: var(--text3); }
+  .breadcrumb .current { color: var(--text); }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.75rem; flex-wrap: wrap;
+  }
+  .toolbar-left { display: flex; align-items: center; gap: 0.75rem; flex: 1; }
+  .toolbar-right { display: flex; align-items: center; gap: 0.5rem; }
+  .view-toggle {
+    display: flex; gap: 2px;
+    background: var(--surface);
+    border-radius: 8px; padding: 3px;
+    border: 1px solid var(--border);
+  }
+  .view-btn {
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; cursor: pointer;
+    color: var(--text3); transition: all 0.15s;
+  }
+  .view-btn svg { width: 15px; height: 15px; }
+  .view-btn.active { background: var(--surface2); color: var(--accent); }
+  .view-btn:hover:not(.active) { color: var(--text); }
+
+  /* Sort/Filter */
+  select.filter-select {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text2); border-radius: 8px;
+    padding: 0.45rem 0.85rem; font-family: inherit; font-size: 0.82rem;
+    outline: none; cursor: pointer; transition: all 0.2s;
+    appearance: none;
+  }
+  select.filter-select:hover { border-color: var(--border2); color: var(--text); }
+
+  /* SECTION TITLE */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem; font-weight: 700; color: var(--text);
+  }
+  .section-count {
+    font-size: 0.78rem; color: var(--text3);
+    background: var(--surface); padding: 2px 10px; border-radius: 50px;
+    border: 1px solid var(--border);
+  }
+
+  /* FOLDER GRID */
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+  .folder-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1.1rem 1rem;
+    cursor: pointer;
+    transition: all 0.22s;
+    position: relative; overflow: hidden;
+  }
+  .folder-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .folder-card:hover {
+    background: var(--surface);
+    border-color: var(--border2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .folder-card:hover::before { opacity: 1; }
+  .folder-icon {
+    width: 42px; height: 36px; margin-bottom: 0.75rem;
+    color: var(--accent); opacity: 0.85;
+  }
+  .folder-name {
+    font-size: 0.85rem; font-weight: 600; color: var(--text);
+    margin-bottom: 0.3rem; word-break: break-word;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .folder-meta { font-size: 0.72rem; color: var(--text3); }
+
+  /* FILE GRID */
+  .file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+  }
+  .file-grid.list-view {
+    grid-template-columns: 1fr;
+  }
+  .file-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+    transition: all 0.22s;
+    cursor: pointer;
+    position: relative;
+  }
+  .file-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  }
+  .file-preview {
+    height: 120px;
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+  }
+  .file-preview img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .file-type-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem; font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+  .ft-pdf { background: rgba(255,75,110,0.15); color: #ff4b6e; }
+  .ft-doc { background: rgba(0,168,240,0.15); color: #00a8f0; }
+  .ft-xls { background: rgba(0,210,180,0.15); color: #00d2b4; }
+  .ft-img { background: rgba(240,165,0,0.15); color: #f0a500; }
+  .ft-apk { background: rgba(120,80,255,0.15); color: #7850ff; }
+  .ft-zip { background: rgba(255,140,0,0.15); color: #ff8c00; }
+  .ft-ppt { background: rgba(255,100,50,0.15); color: #ff6432; }
+  .ft-aud { background: rgba(0,210,180,0.15); color: #00d2b4; }
+  .ft-vid { background: rgba(0,168,240,0.15); color: #00a8f0; }
+  .ft-file { background: rgba(139,153,184,0.15); color: #8b99b8; }
+
+  .file-body { padding: 0.75rem; }
+  .file-name {
+    font-size: 0.82rem; font-weight: 600; color: var(--text);
+    margin-bottom: 0.4rem; word-break: break-word;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+    line-height: 1.4;
+  }
+  .file-meta { font-size: 0.7rem; color: var(--text3); line-height: 1.6; }
+  .file-uploader {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.72rem; color: var(--text2); margin-top: 0.4rem;
+    padding-top: 0.4rem; border-top: 1px solid var(--border);
+  }
+  .avatar-sm {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.5rem; font-weight: 700; color: #070b12;
+    flex-shrink: 0;
+  }
+
+  /* List view style */
+  .file-grid.list-view .file-card {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.75rem 1rem;
+  }
+  .file-grid.list-view .file-preview {
+    width: 40px; height: 40px; flex-shrink: 0;
+    border: none; border-radius: 8px;
+  }
+  .file-grid.list-view .file-body {
+    flex: 1; padding: 0; min-width: 0;
+  }
+  .file-grid.list-view .file-name { -webkit-line-clamp: 1; margin-bottom: 0.15rem; }
+  .file-grid.list-view .file-meta { display: flex; gap: 1rem; }
+  .file-grid.list-view .file-uploader { border-top: none; padding-top: 0; margin-top: 0; }
+  .file-actions-row {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-left: auto; flex-shrink: 0;
+  }
+  .file-grid:not(.list-view) .file-actions-row { display: none; }
+
+  .icon-btn {
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; cursor: pointer; border: none;
+    background: transparent; color: var(--text3);
+    transition: all 0.15s;
+  }
+  .icon-btn:hover { background: var(--surface2); color: var(--accent); }
+  .icon-btn svg { width: 14px; height: 14px; }
+
+  /* Dropzone */
+  #dropzone {
+    display: none;
+    border: 2px dashed var(--border2);
+    border-radius: var(--r);
+    padding: 3rem 2rem;
+    text-align: center;
+    background: var(--accent-glow);
+    transition: all 0.2s;
+    margin-bottom: 1.5rem;
+  }
+  #dropzone.active { display: block; }
+  #dropzone.drag-over {
+    border-color: var(--accent);
+    background: rgba(0,210,180,0.12);
+  }
+  #dropzone svg { width: 48px; height: 48px; color: var(--accent); margin-bottom: 1rem; opacity: 0.7; }
+  #dropzone p { color: var(--text2); font-size: 0.9rem; }
+  #dropzone span { color: var(--accent); font-weight: 600; cursor: pointer; }
+  #dropzone input { display: none; }
+
+  /* Director badge */
+  .dir-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(0,210,180,0.12);
+    border: 1px solid var(--border2);
+    color: var(--accent); border-radius: 50px;
+    padding: 0.3rem 0.9rem; font-size: 0.78rem; font-weight: 600;
+  }
+  .dir-badge svg { width: 13px; height: 13px; }
+
+  /* MODALS */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(7,11,18,0.85);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 2rem;
+    width: min(520px, 95vw);
+    max-height: 90vh; overflow-y: auto;
+    transform: translateY(16px) scale(0.98);
+    transition: transform 0.25s;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem; font-weight: 700; color: var(--text);
+  }
+  .modal-close {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; cursor: pointer; color: var(--text3);
+    transition: all 0.15s; background: var(--surface); border: none;
+  }
+  .modal-close:hover { background: var(--surface2); color: var(--text); }
+  .modal-close svg { width: 16px; height: 16px; }
+
+  /* Form */
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label {
+    display: block; font-size: 0.8rem; font-weight: 600;
+    color: var(--text2); margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+  }
+  .form-input {
+    width: 100%; background: var(--bg3);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.7rem 1rem; color: var(--text);
+    font-family: inherit; font-size: 0.88rem;
+    outline: none; transition: all 0.2s;
+  }
+  .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  .form-input::placeholder { color: var(--text3); }
+  .form-hint { font-size: 0.75rem; color: var(--text3); margin-top: 0.4rem; }
+
+  /* Login icon animation */
+  .login-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, rgba(0,210,180,0.15), rgba(0,168,240,0.15));
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .login-icon svg { width: 32px; height: 32px; color: var(--accent); }
+
+  /* Upload area in modal */
+  .upload-drop {
+    border: 2px dashed var(--border);
+    border-radius: var(--r);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .upload-drop:hover, .upload-drop.drag { border-color: var(--accent); background: var(--accent-glow); }
+  .upload-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .upload-drop svg { width: 36px; height: 36px; color: var(--accent); opacity: 0.6; margin-bottom: 0.75rem; }
+  .upload-drop p { color: var(--text2); font-size: 0.85rem; }
+  .upload-drop span { color: var(--accent); font-weight: 600; }
+
+  .file-queue { list-style: none; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .file-queue li {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.5rem 0.75rem;
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.82rem; color: var(--text2);
+  }
+  .file-queue li svg { width: 14px; height: 14px; color: var(--accent); flex-shrink: 0; }
+  .file-queue li span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-queue li .remove-file { cursor: pointer; color: var(--text3); }
+  .file-queue li .remove-file:hover { color: var(--danger); }
+
+  /* Progress bar */
+  .progress-bar { height: 4px; background: var(--surface); border-radius: 2px; overflow: hidden; margin-top: 0.5rem; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width 0.3s; }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .toast-item {
+    background: var(--bg2); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 0.85rem 1.2rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    font-size: 0.85rem; color: var(--text);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    animation: slideUp 0.3s ease;
+    max-width: 320px;
+  }
+  .toast-item.success { border-color: rgba(0,210,180,0.35); }
+  .toast-item.error { border-color: rgba(255,75,110,0.35); }
+  .toast-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .toast-item.success .toast-dot { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .toast-item.error .toast-dot { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+  @keyframes slideUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center; padding: 4rem 2rem; color: var(--text3);
+  }
+  .empty-state svg { width: 64px; height: 64px; margin-bottom: 1rem; opacity: 0.25; }
+  .empty-state h3 { font-family: 'Syne', sans-serif; font-size: 1rem; color: var(--text2); margin-bottom: 0.5rem; }
+  .empty-state p { font-size: 0.85rem; }
+
+  /* Preview modal special */
+  .preview-modal { width: min(800px, 95vw); }
+  .preview-frame {
+    width: 100%; border-radius: var(--r2);
+    background: #000; border: 1px solid var(--border);
+    min-height: 400px; display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .preview-frame img { max-width: 100%; max-height: 70vh; object-fit: contain; }
+  .preview-frame iframe { width: 100%; height: 65vh; border: none; }
+
+  /* SETUP NOTICE */
+  .setup-notice {
+    background: rgba(240,165,0,0.08);
+    border: 1px solid rgba(240,165,0,0.25);
+    border-radius: var(--r);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex; gap: 0.85rem; align-items: flex-start;
+  }
+  .setup-notice svg { width: 18px; height: 18px; color: var(--warn); flex-shrink: 0; margin-top: 1px; }
+  .setup-notice p { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+  .setup-notice a { color: var(--accent); text-decoration: none; }
+  .setup-notice a:hover { text-decoration: underline; }
+
+  /* Stats row */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem; margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 1rem 1.1rem;
+  }
+  .stat-label { font-size: 0.72rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.4rem; }
+  .stat-value { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text); }
+  .stat-accent { color: var(--accent); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    main { padding: 1rem; }
+    .header-wave { display: none; }
+    #searchInput { width: 150px; }
+    #searchInput:focus { width: 190px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-mark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+      <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+    </svg>
+  </div>
+  <div class="header-title">
+    <span>Ministério de Sonoplastia</span>
+    <span>Distrito Caldeirão Grande</span>
+  </div>
+
+  <div class="header-wave" id="headerWave"></div>
+
+  <div class="header-actions">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Buscar arquivos..." oninput="searchFiles(this.value)">
+    </div>
+
+    <div id="directorInfo" style="display:none">
+      <div class="dir-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span id="directorName">Diretor</span>
+      </div>
+    </div>
+
+    <button class="btn btn-ghost" id="loginBtn" onclick="openLoginModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Entrar
+    </button>
+    <button class="btn btn-danger btn-sm" id="logoutBtn" style="display:none" onclick="logout()">Sair</button>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-label">Navegação</div>
+    <div class="nav-item active" onclick="navigateTo('root')" id="nav-root">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Início
+    </div>
+    <div class="nav-item" onclick="navigateTo('recentes')" id="nav-recentes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Recentes
+    </div>
+    <div class="nav-item" onclick="navigateTo('search')" id="nav-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Pesquisa
+    </div>
+
+    <div class="sidebar-label">Categorias</div>
+    <div id="sidebarFolders">
+      <!-- Folders populated dynamically -->
+    </div>
+
+    <div class="sidebar-label" id="adminSection" style="display:none">Admin</div>
+    <div class="nav-item" onclick="openUploadModal()" id="uploadNavBtn" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Enviar Arquivo
+    </div>
+    <div class="nav-item" onclick="openFolderModal()" id="folderNavBtn" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Nova Pasta
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="mainContent">
+
+    <div class="setup-notice" id="setupNotice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p>⚙️ <strong>Configuração necessária:</strong> Este site precisa de um <strong>Google Apps Script</strong> conectado ao seu Google Drive. 
+      Abra o arquivo <code>apps-script.js</code> que vem junto e siga o guia de configuração. 
+      Após configurar, cole a URL do script em <code>window.APPS_SCRIPT_URL</code> no código.
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card">
+        <div class="stat-label">Total de Arquivos</div>
+        <div class="stat-value stat-accent" id="statFiles">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pastas</div>
+        <div class="stat-value" id="statFolders">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Último envio</div>
+        <div class="stat-value" style="font-size:0.9rem; padding-top:0.4rem" id="statLast">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Diretores</div>
+        <div class="stat-value" id="statDirs">—</div>
+      </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb" id="breadcrumb">
+      <span onclick="navigateTo('root')">🏠 Início</span>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="section-header" style="margin:0; flex:1">
+          <span class="section-title" id="currentSectionTitle">Todos os Arquivos</span>
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <select class="filter-select" onchange="sortFiles(this.value)">
+          <option value="date">Mais recentes</option>
+          <option value="name">Nome (A-Z)</option>
+          <option value="type">Tipo</option>
+        </select>
+        <div class="view-toggle">
+          <div class="view-btn active" id="gridViewBtn" onclick="setView('grid')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          </div>
+          <div class="view-btn" id="listViewBtn" onclick="setView('list')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="uploadBtn" style="display:none" onclick="openUploadModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Enviar
+        </button>
+      </div>
+    </div>
+
+    <!-- Folders section -->
+    <div id="foldersSection">
+      <div class="section-header">
+        <span class="section-title">Pastas</span>
+        <span class="section-count" id="folderCount">0</span>
+      </div>
+      <div class="folder-grid" id="folderGrid"></div>
+    </div>
+
+    <!-- Files section -->
+    <div id="filesSection">
+      <div class="section-header">
+        <span class="section-title">Arquivos</span>
+        <span class="section-count" id="fileCount">0</span>
+      </div>
+      <div class="file-grid" id="fileGrid"></div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+      </svg>
+      <h3>Nenhum arquivo aqui</h3>
+      <p>Esta pasta está vazia. Um diretor pode enviar arquivos aqui.</p>
+    </div>
+
+    <!-- Loading -->
+    <div id="loadingState" style="display:none; text-align:center; padding:3rem; color: var(--text3); font-size:0.85rem">
+      <div style="width:36px;height:36px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem"></div>
+      Carregando...
+    </div>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Acesso de Diretor</span>
+      <button class="modal-close" onclick="closeModal('loginModal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="login-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Código do Diretor</label>
+      <input type="password" class="form-input" id="dirCode" placeholder="Digite seu código secreto..." autocomplete="off">
+      <p class="form-hint">Apenas diretores cadastrados possuem código de acesso.</p>
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="loginDirector()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Entrar
+    </button>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Enviar Arquivo(s)</span>
+      <button class="modal-close" onclick="closeModal('uploadModal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="upload-drop" id="uploadDrop" onclick="document.getElementById('fileInput').click()"
+      ondragover="e=>{e.preventDefault();this.classList.add('drag')}" 
+      ondragleave="this.classList.remove('drag')"
+      ondrop="handleDropFiles(event)">
+      <input type="file" id="fileInput" multiple onchange="handleFileSelect(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>Arraste arquivos aqui ou <span>clique para selecionar</span></p>
+    </div>
+
+    <ul class="file-queue" id="fileQueue"></ul>
+
+    <div class="form-group" style="margin-top:1rem">
+      <label class="form-label">Pasta de Destino</label>
+      <select class="form-input" id="targetFolder">
+        <option value="">📁 Raiz (sem pasta)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Descrição (opcional)</label>
+      <input type="text" class="form-input" id="fileDescription" placeholder="Ex: Treinamento de Técnico de Som — Janeiro 2025">
+    </div>
+
+    <div id="uploadProgress" style="display:none">
+      <div class="form-label">Enviando...</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%; margin-top:1rem" onclick="uploadFiles()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Enviar Arquivos
+    </button>
+  </div>
+</div>
+
+<!-- CREATE FOLDER MODAL -->
+<div class="modal-overlay" id="folderModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Nova Pasta</span>
+      <button class="modal-close" onclick="closeModal('folderModal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome da Pasta</label>
+      <input type="text" class="form-input" id="folderName" placeholder="Ex: Treinamentos, Programas, APKs...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Pasta Pai (opcional)</label>
+      <select class="form-input" id="parentFolder">
+        <option value="">📁 Raiz</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="createFolder()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Criar Pasta
+    </button>
+  </div>
+</div>
+
+<!-- FILE PREVIEW MODAL -->
+<div class="modal-overlay" id="previewModal">
+  <div class="modal preview-modal">
+    <div class="modal-header">
+      <span class="modal-title" id="previewTitle">Visualizar Arquivo</span>
+      <div style="display:flex;gap:0.5rem">
+        <button class="btn btn-ghost btn-sm" id="previewDownloadBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Baixar
+        </button>
+        <button class="modal-close" onclick="closeModal('previewModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="preview-frame" id="previewFrame"></div>
+    <div id="previewMeta" style="margin-top:1rem; display:flex; gap:1rem; flex-wrap:wrap; font-size:0.8rem; color:var(--text3)"></div>
+  </div>
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+// ====================================================
+// CONFIGURATION — Paste your Apps Script URL here
+// ====================================================
+window.APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZ4sGAor8vh_o6ZUfukVn3IP1d356hM0V8YWfjk69oyw20DUVy0vFEBtn1d4pRjYOQ4g/exec';
+
+// ====================================================
+// STATE
+// ====================================================
+const state = {
+  director: null,
+  currentFolder: null,
+  folders: [],
+  files: [],
+  allFiles: [],
+  view: 'grid',
+  pendingFiles: [],
+  sortBy: 'date'
+};
+
+// ====================================================
+// WAVE ANIMATION
+// ====================================================
+(function buildWave() {
+  const w = document.getElementById('headerWave');
+  const heights = [6,10,14,18,22,28,22,18,14,10,6,10,18,22,16,12,8,12,18,24,18,12,8];
+  heights.forEach((h, i) => {
+    const s = document.createElement('span');
+    s.style.setProperty('--h', h + 'px');
+    s.style.animationDelay = (i * 0.07) + 's';
+    w.appendChild(s);
+  });
+})();
+
+// ====================================================
+// INIT
+// ====================================================
+document.addEventListener('DOMContentLoaded', () => {
+  const stored = sessionStorage.getItem('director');
+  if (stored) {
+    state.director = JSON.parse(stored);
+    setDirectorUI();
+  }
+  loadContent();
+  buildSidebarFolders();
+});
+
+// ====================================================
+// API CALLS
+// ====================================================
+async function api(action, params = {}) {
+  if (window.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    return getDemoData(action, params);
+  }
+  const url = new URL(window.APPS_SCRIPT_URL);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+  try {
+    const r = await fetch(url.toString());
+    return await r.json();
+  } catch(e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+async function apiPost(action, body) {
+  if (window.APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    return getDemoData(action, body);
+  }
+  try {
+    const r = await fetch(window.APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, ...body })
+    });
+    return await r.json();
+  } catch(e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+// ====================================================
+// DEMO DATA (sem Apps Script configurado)
+// ====================================================
+function getDemoData(action, params) {
+  const folders = [
+    { id: 'f1', name: 'Programas Sugestivos', fileCount: 8, createdBy: 'Pr. Marcos — IEQ Central' },
+    { id: 'f2', name: 'Treinamentos', fileCount: 12, createdBy: 'Dir. João — IEQ Norte' },
+    { id: 'f3', name: 'APKs e Softwares', fileCount: 5, createdBy: 'Dir. Ana — IEQ Sul' },
+    { id: 'f4', name: 'Atas e Documentos', fileCount: 19, createdBy: 'Pr. Marcos — IEQ Central' },
+    { id: 'f5', name: 'Eventos e Louvores', fileCount: 7, createdBy: 'Dir. Lucas — IEQ Leste' },
+    { id: 'f6', name: 'Materiais de Apoio', fileCount: 3, createdBy: 'Dir. Ana — IEQ Sul' },
+  ];
+  const files = [
+    { id: 'a1', name: 'Manual do Técnico de Som.pdf', type: 'pdf', size: '2.4 MB', date: '2025-01-15', uploadedBy: 'Dir. João', church: 'IEQ Norte', folderId: 'f2', description: 'Manual completo para técnicos iniciantes' },
+    { id: 'a2', name: 'Programa Culto de Domingo.docx', type: 'doc', size: '340 KB', date: '2025-01-14', uploadedBy: 'Pr. Marcos', church: 'IEQ Central', folderId: 'f1', description: 'Modelo padrão de programa' },
+    { id: 'a3', name: 'Checklist Sonoplastia.xlsx', type: 'xls', size: '85 KB', date: '2025-01-13', uploadedBy: 'Dir. Ana', church: 'IEQ Sul', folderId: null, description: '' },
+    { id: 'a4', name: 'SoundBoard Pro v2.apk', type: 'apk', size: '18.2 MB', date: '2025-01-12', uploadedBy: 'Dir. Lucas', church: 'IEQ Leste', folderId: 'f3', description: 'App controlador de mesa digital' },
+    { id: 'a5', name: 'Mapa de Cabos - Setup.png', type: 'img', size: '1.1 MB', date: '2025-01-11', uploadedBy: 'Dir. João', church: 'IEQ Norte', folderId: 'f2', description: 'Diagrama de ligação padrão' },
+    { id: 'a6', name: 'Ata Reunião Janeiro 2025.pdf', type: 'pdf', size: '520 KB', date: '2025-01-10', uploadedBy: 'Pr. Marcos', church: 'IEQ Central', folderId: 'f4', description: '' },
+    { id: 'a7', name: 'Treinamento Microfones.mp4', type: 'vid', size: '45.8 MB', date: '2025-01-09', uploadedBy: 'Dir. Ana', church: 'IEQ Sul', folderId: 'f2', description: 'Vídeo aula sobre posicionamento de microfones' },
+    { id: 'a8', name: 'Equalização de Ambiente.pdf', type: 'pdf', size: '1.7 MB', date: '2025-01-08', uploadedBy: 'Dir. Lucas', church: 'IEQ Leste', folderId: 'f2', description: '' },
+  ];
+  if (action === 'listFolders') return { success: true, folders };
+  if (action === 'listFiles') return { success: true, files: files.filter(f => params.folderId ? f.folderId === params.folderId : true) };
+  if (action === 'getStats') return { success: true, stats: { files: 54, folders: 6, directors: 4, lastUpload: 'Dir. João — há 2 dias' } };
+  if (action === 'login') {
+    const codes = { 'DIR001': { name: 'Dir. João', church: 'IEQ Norte' }, 'ADM2025': { name: 'Pr. Marcos', church: 'IEQ Central' } };
+    const d = codes[params.code?.toUpperCase()];
+    if (d) return { success: true, director: d };
+    return { success: false, message: 'Código inválido' };
+  }
+  if (action === 'createFolder') return { success: true, folder: { id: 'new_' + Date.now(), name: params.name, fileCount: 0 } };
+  if (action === 'uploadFile') return { success: true };
+  return { success: true };
+}
+
+// ====================================================
+// LOAD CONTENT
+// ====================================================
+async function loadContent(folderId = null) {
+  showLoading(true);
+  try {
+    const [fRes, fiRes, sRes] = await Promise.all([
+      api('listFolders', folderId ? { parentId: folderId } : {}),
+      api('listFiles', folderId ? { folderId } : {}),
+      api('getStats')
+    ]);
+    state.folders = fRes.folders || [];
+    state.files = fiRes.files || [];
+    state.allFiles = fiRes.files || [];
+    renderStats(sRes.stats || {});
+    renderFolders();
+    renderFiles();
+    buildSidebarFolders();
+  } catch(e) {
+    toast('Erro ao carregar conteúdo', 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
+// ====================================================
+// RENDER FOLDERS
+// ====================================================
+function renderFolders() {
+  const grid = document.getElementById('folderGrid');
+  const sec = document.getElementById('foldersSection');
+  document.getElementById('folderCount').textContent = state.folders.length;
+  if (!state.folders.length) { sec.style.display = 'none'; return; }
+  sec.style.display = '';
+  grid.innerHTML = state.folders.map(f => `
+    <div class="folder-card" onclick="enterFolder('${f.id}', '${escHtml(f.name)}')">
+      <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+      </svg>
+      <div class="folder-name">${escHtml(f.name)}</div>
+      <div class="folder-meta">${f.fileCount || 0} arquivo(s) · ${escHtml(f.createdBy || '')}</div>
+    </div>
+  `).join('');
+}
+
+// ====================================================
+// RENDER FILES
+// ====================================================
+function renderFiles() {
+  const grid = document.getElementById('fileGrid');
+  const sec = document.getElementById('filesSection');
+  const empty = document.getElementById('emptyState');
+  const files = sortedFiles(state.files);
+  document.getElementById('fileCount').textContent = files.length;
+
+  if (!files.length && !state.folders.length) {
+    sec.style.display = 'none'; empty.style.display = '';
+  } else {
+    empty.style.display = 'none'; sec.style.display = '';
+  }
+
+  grid.innerHTML = files.map(f => `
+    <div class="file-card" onclick="previewFile('${f.id}')">
+      <div class="file-preview">
+        ${f.type === 'img' && f.thumbUrl ? `<img src="${f.thumbUrl}" alt="">` : `<div class="file-type-icon ft-${f.type}">${f.type.toUpperCase()}</div>`}
+      </div>
+      <div class="file-body">
+        <div class="file-name">${escHtml(f.name)}</div>
+        <div class="file-meta">${f.size || ''} · ${formatDate(f.date)}</div>
+        ${f.description ? `<div class="file-meta" style="margin-top:2px;color:var(--text3)">${escHtml(f.description)}</div>` : ''}
+        <div class="file-uploader">
+          <div class="avatar-sm">${(f.uploadedBy || 'U')[0]}</div>
+          <span>${escHtml(f.uploadedBy || 'Desconhecido')} · ${escHtml(f.church || '')}</span>
+        </div>
+      </div>
+      <div class="file-actions-row">
+        <button class="icon-btn" title="Baixar" onclick="event.stopPropagation(); downloadFile('${f.id}', '${escHtml(f.name)}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+        ${state.director ? `<button class="icon-btn" title="Excluir" onclick="event.stopPropagation(); deleteFile('${f.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function sortedFiles(files) {
+  return [...files].sort((a, b) => {
+    if (state.sortBy === 'name') return a.name.localeCompare(b.name);
+    if (state.sortBy === 'type') return a.type.localeCompare(b.type);
+    return new Date(b.date) - new Date(a.date);
+  });
+}
+
+function sortFiles(v) { state.sortBy = v; renderFiles(); }
+
+// ====================================================
+// STATS
+// ====================================================
+function renderStats(s) {
+  document.getElementById('statFiles').textContent = s.files || 0;
+  document.getElementById('statFolders').textContent = s.folders || 0;
+  document.getElementById('statLast').textContent = s.lastUpload || '—';
+  document.getElementById('statDirs').textContent = s.directors || '—';
+}
+
+// ====================================================
+// NAVIGATION
+// ====================================================
+const folderPath = [];
+
+function enterFolder(id, name) {
+  folderPath.push({ id, name });
+  state.currentFolder = id;
+  updateBreadcrumb();
+  loadContent(id);
+  updateSidebarActive('folder-' + id);
+}
+
+function navigateTo(view) {
+  if (view === 'root') {
+    folderPath.length = 0;
+    state.currentFolder = null;
+    loadContent();
+    updateBreadcrumb();
+    document.getElementById('currentSectionTitle').textContent = 'Todos os Arquivos';
+    updateSidebarActive('nav-root');
+  }
+}
+
+function updateBreadcrumb() {
+  const bc = document.getElementById('breadcrumb');
+  let html = `<a onclick="navigateTo('root')">🏠 Início</a>`;
+  folderPath.forEach((f, i) => {
+    html += `<span class="sep"> / </span>`;
+    if (i < folderPath.length - 1) {
+      html += `<a onclick="goBackTo(${i})">${escHtml(f.name)}</a>`;
+    } else {
+      html += `<span class="current">${escHtml(f.name)}</span>`;
+    }
+  });
+  bc.innerHTML = html;
+  document.getElementById('currentSectionTitle').textContent = folderPath.length ? folderPath[folderPath.length-1].name : 'Todos os Arquivos';
+}
+
+function goBackTo(index) {
+  folderPath.splice(index + 1);
+  state.currentFolder = folderPath.length ? folderPath[folderPath.length-1].id : null;
+  updateBreadcrumb();
+  loadContent(state.currentFolder);
+}
+
+function updateSidebarActive(id) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
+// ====================================================
+// SIDEBAR FOLDERS
+// ====================================================
+function buildSidebarFolders() {
+  const container = document.getElementById('sidebarFolders');
+  container.innerHTML = state.folders.map(f => `
+    <div class="nav-item" id="folder-${f.id}" onclick="enterFolder('${f.id}', '${escHtml(f.name)}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      ${escHtml(f.name)}
+      <span class="badge">${f.fileCount || 0}</span>
+    </div>
+  `).join('');
+}
+
+// ====================================================
+// SEARCH
+// ====================================================
+function searchFiles(query) {
+  if (!query.trim()) { state.files = state.allFiles; renderFiles(); return; }
+  const q = query.toLowerCase();
+  state.files = state.allFiles.filter(f =>
+    f.name.toLowerCase().includes(q) ||
+    (f.uploadedBy || '').toLowerCase().includes(q) ||
+    (f.church || '').toLowerCase().includes(q) ||
+    (f.description || '').toLowerCase().includes(q)
+  );
+  renderFiles();
+}
+
+// ====================================================
+// VIEW TOGGLE
+// ====================================================
+function setView(v) {
+  state.view = v;
+  const grid = document.getElementById('fileGrid');
+  grid.classList.toggle('list-view', v === 'list');
+  document.getElementById('gridViewBtn').classList.toggle('active', v === 'grid');
+  document.getElementById('listViewBtn').classList.toggle('active', v === 'list');
+}
+
+// ====================================================
+// DIRECTOR AUTH
+// ====================================================
+async function loginDirector() {
+  const code = document.getElementById('dirCode').value.trim();
+  if (!code) { toast('Digite o código', 'error'); return; }
+  try {
+    const res = await api('login', { code });
+    if (res.success) {
+      state.director = res.director;
+      sessionStorage.setItem('director', JSON.stringify(res.director));
+      setDirectorUI();
+      closeModal('loginModal');
+      toast(`Bem-vindo(a), ${res.director.name}!`, 'success');
+      document.getElementById('dirCode').value = '';
+    } else {
+      toast(res.message || 'Código inválido', 'error');
+    }
+  } catch(e) { toast('Erro de conexão', 'error'); }
+}
+
+function logout() {
+  state.director = null;
+  sessionStorage.removeItem('director');
+  setDirectorUI();
+  toast('Sessão encerrada', 'success');
+}
+
+function setDirectorUI() {
+  const isDir = !!state.director;
+  document.getElementById('loginBtn').style.display = isDir ? 'none' : '';
+  document.getElementById('logoutBtn').style.display = isDir ? '' : 'none';
+  document.getElementById('directorInfo').style.display = isDir ? '' : 'none';
+  document.getElementById('uploadBtn').style.display = isDir ? '' : 'none';
+  document.getElementById('uploadNavBtn').style.display = isDir ? '' : 'none';
+  document.getElementById('folderNavBtn').style.display = isDir ? '' : 'none';
+  document.getElementById('adminSection').style.display = isDir ? '' : 'none';
+  if (isDir) document.getElementById('directorName').textContent = `${state.director.name} · ${state.director.church}`;
+  renderFiles(); // re-render to show/hide delete buttons
+}
+
+// ====================================================
+// UPLOAD
+// ====================================================
+function openUploadModal() {
+  if (!state.director) { openLoginModal(); return; }
+  populateFolderSelects();
+  openModal('uploadModal');
+}
+
+function handleFileSelect(input) {
+  for (const f of input.files) addPendingFile(f);
+}
+
+function handleDropFiles(e) {
+  e.preventDefault();
+  document.getElementById('uploadDrop').classList.remove('drag');
+  for (const f of e.dataTransfer.files) addPendingFile(f);
+}
+
+function addPendingFile(file) {
+  state.pendingFiles.push(file);
+  renderFileQueue();
+}
+
+function renderFileQueue() {
+  const ul = document.getElementById('fileQueue');
+  ul.innerHTML = state.pendingFiles.map((f, i) => `
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+      <span>${escHtml(f.name)}</span>
+      <span style="color:var(--text3);flex-shrink:0">${formatSize(f.size)}</span>
+      <span class="remove-file" onclick="removePendingFile(${i})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </span>
+    </li>
+  `).join('');
+}
+
+function removePendingFile(i) {
+  state.pendingFiles.splice(i, 1);
+  renderFileQueue();
+}
+
+async function uploadFiles() {
+  if (!state.pendingFiles.length) { toast('Selecione ao menos um arquivo', 'error'); return; }
+  const folder = document.getElementById('targetFolder').value;
+  const desc = document.getElementById('fileDescription').value;
+  document.getElementById('uploadProgress').style.display = '';
+
+  let uploaded = 0;
+  for (const file of state.pendingFiles) {
+    const b64 = await toBase64(file);
+    document.getElementById('progressFill').style.width = ((uploaded / state.pendingFiles.length) * 100) + '%';
+    await apiPost('uploadFile', {
+      name: file.name,
+      data: b64,
+      mimeType: file.type,
+      folderId: folder || null,
+      description: desc,
+      directorName: state.director.name,
+      church: state.director.church,
+      date: new Date().toISOString().split('T')[0]
+    });
+    uploaded++;
+  }
+  document.getElementById('progressFill').style.width = '100%';
+  setTimeout(() => {
+    closeModal('uploadModal');
+    state.pendingFiles = [];
+    document.getElementById('fileQueue').innerHTML = '';
+    document.getElementById('uploadProgress').style.display = 'none';
+    loadContent(state.currentFolder);
+    toast(`${uploaded} arquivo(s) enviado(s) com sucesso!`, 'success');
+  }, 500);
+}
+
+function toBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ====================================================
+// CREATE FOLDER
+// ====================================================
+function openFolderModal() {
+  if (!state.director) { openLoginModal(); return; }
+  populateFolderSelects();
+  openModal('folderModal');
+}
+
+async function createFolder() {
+  const name = document.getElementById('folderName').value.trim();
+  if (!name) { toast('Digite o nome da pasta', 'error'); return; }
+  const parentId = document.getElementById('parentFolder').value;
+  try {
+    const res = await apiPost('createFolder', { name, parentId: parentId || null, createdBy: `${state.director.name} — ${state.director.church}` });
+    if (res.success) {
+      toast(`Pasta "${name}" criada!`, 'success');
+      closeModal('folderModal');
+      document.getElementById('folderName').value = '';
+      loadContent(state.currentFolder);
+    } else {
+      toast(res.message || 'Erro ao criar pasta', 'error');
+    }
+  } catch(e) { toast('Erro de conexão', 'error'); }
+}
+
+// ====================================================
+// FILE PREVIEW
+// ====================================================
+async function previewFile(id) {
+  const file = state.files.find(f => f.id === id);
+  if (!file) return;
+  document.getElementById('previewTitle').textContent = file.name;
+  const frame = document.getElementById('previewFrame');
+  const meta = document.getElementById('previewMeta');
+
+  meta.innerHTML = `
+    <span>📅 ${formatDate(file.date)}</span>
+    <span>📦 ${file.size || '—'}</span>
+    <span>👤 ${escHtml(file.uploadedBy || '')} · ${escHtml(file.church || '')}</span>
+    ${file.description ? `<span>💬 ${escHtml(file.description)}</span>` : ''}
+  `;
+
+  const url = file.viewUrl || file.downloadUrl || '';
+  if (file.type === 'img' && url) {
+    frame.innerHTML = `<img src="${url}" alt="${escHtml(file.name)}">`;
+  } else if (file.type === 'pdf' && url) {
+    frame.innerHTML = `<iframe src="${url}" title="${escHtml(file.name)}"></iframe>`;
+  } else {
+    frame.innerHTML = `
+      <div style="text-align:center; padding:2rem; color:var(--text3)">
+        <div class="file-type-icon ft-${file.type}" style="margin:0 auto 1rem; width:56px;height:56px;font-size:0.85rem">${file.type.toUpperCase()}</div>
+        <p style="color:var(--text2); margin-bottom:0.5rem">${escHtml(file.name)}</p>
+        <p style="font-size:0.8rem">Clique em Baixar para salvar este arquivo</p>
+      </div>`;
+  }
+
+  document.getElementById('previewDownloadBtn').onclick = () => downloadFile(id, file.name);
+  openModal('previewModal');
+}
+
+function downloadFile(id, name) {
+  const file = state.files.find(f => f.id === id);
+  if (!file) return;
+  if (file.downloadUrl) {
+    const a = document.createElement('a'); a.href = file.downloadUrl; a.download = name; a.click();
+  } else {
+    toast('URL de download não disponível neste modo demo', 'error');
+  }
+}
+
+async function deleteFile(id) {
+  if (!confirm('Excluir este arquivo?')) return;
+  try {
+    const res = await apiPost('deleteFile', { fileId: id });
+    if (res.success) {
+      toast('Arquivo excluído', 'success');
+      loadContent(state.currentFolder);
+    }
+  } catch(e) { toast('Erro ao excluir', 'error'); }
+}
+
+// ====================================================
+// HELPERS
+// ====================================================
+function populateFolderSelects() {
+  ['targetFolder', 'parentFolder'].forEach(selId => {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+    const base = sel.options[0].outerHTML;
+    sel.innerHTML = base + state.folders.map(f => `<option value="${f.id}">${escHtml(f.name)}</option>`).join('');
+  });
+}
+
+function showLoading(v) {
+  document.getElementById('loadingState').style.display = v ? '' : 'none';
+  if (v) {
+    document.getElementById('foldersSection').style.display = 'none';
+    document.getElementById('filesSection').style.display = 'none';
+  }
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openLoginModal() { openModal('loginModal'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+});
+
+function toast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  const el = document.createElement('div');
+  el.className = `toast-item ${type}`;
+  el.innerHTML = `<div class="toast-dot"></div><span>${escHtml(msg)}</span>`;
+  t.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+function escHtml(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function formatDate(d) { if (!d) return '—'; try { return new Date(d).toLocaleDateString('pt-BR'); } catch(e) { return d; } }
+function formatSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+</script>
+</body>
+</html>
