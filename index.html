@@ -124,13 +124,15 @@
   }
   #searchInput::placeholder { color: var(--text3); }
   .search-btn {
-    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%) scale(0.7);
     width: 28px; height: 28px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     border: none; border-radius: 6px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.2s; flex-shrink: 0;
+    opacity: 0; pointer-events: none;
   }
+  .search-btn.visible { opacity: 1; pointer-events: all; transform: translateY(-50%) scale(1); }
   .search-btn:hover { transform: translateY(-50%) scale(1.08); box-shadow: 0 2px 10px rgba(0,210,180,0.4); }
   .search-btn svg { width: 13px; height: 13px; color: #070b12; }
 
@@ -664,7 +666,7 @@
       </svg>
       <input type="text" id="searchInput" placeholder="Buscar arquivos..."
         onkeydown="if(event.key==='Enter') triggerSearch()"
-        oninput="if(!this.value.trim()){clearSearch()}">
+        oninput="document.querySelector('.search-btn').classList.toggle('visible', this.value.trim().length > 0); if(!this.value.trim()){clearSearch()}">
       <button class="search-btn" onclick="triggerSearch()" title="Buscar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
