@@ -110,7 +110,7 @@
     background: var(--bg3);
     border: 1px solid var(--border);
     border-radius: 50px;
-    padding: 0.5rem 1rem 0.5rem 2.2rem;
+    padding: 0.5rem 2.5rem 0.5rem 2.2rem;
     color: var(--text); font-family: inherit; font-size: 0.85rem;
     width: 220px;
     transition: all 0.25s;
@@ -123,6 +123,16 @@
     width: 280px;
   }
   #searchInput::placeholder { color: var(--text3); }
+  .search-btn {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: 6px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .search-btn:hover { transform: translateY(-50%) scale(1.08); box-shadow: 0 2px 10px rgba(0,210,180,0.4); }
+  .search-btn svg { width: 13px; height: 13px; color: #070b12; }
 
   .btn {
     display: inline-flex; align-items: center; gap: 0.45rem;
@@ -652,7 +662,14 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
       </svg>
-      <input type="text" id="searchInput" placeholder="Buscar arquivos..." oninput="searchFiles(this.value)">
+      <input type="text" id="searchInput" placeholder="Buscar arquivos..."
+        onkeydown="if(event.key==='Enter') triggerSearch()"
+        oninput="if(!this.value.trim()){clearSearch()}">
+      <button class="search-btn" onclick="triggerSearch()" title="Buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </button>
     </div>
 
     <div id="directorInfo" style="display:none">
@@ -1275,16 +1292,46 @@ function buildSidebarFolders() {
 // ====================================================
 // SEARCH
 // ====================================================
-function searchFiles(query) {
-  if (!query.trim()) { state.files = state.allFiles; renderFiles(); return; }
-  const q = query.toLowerCase();
-  state.files = state.allFiles.filter(f =>
-    f.name.toLowerCase().includes(q) ||
-    (f.uploadedBy || '').toLowerCase().includes(q) ||
-    (f.church || '').toLowerCase().includes(q) ||
-    (f.description || '').toLowerCase().includes(q)
-  );
+function clearSearch() {
+  state.files = state.allFiles;
+  document.getElementById('foldersSection').style.display = '';
+  document.getElementById('currentSectionTitle').textContent =
+    folderPath.length ? folderPath[folderPath.length-1].name : 'Todos os Arquivos';
   renderFiles();
+}
+
+async function triggerSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  if (!query) { clearSearch(); return; }
+  showLoading(true);
+  try {
+    // Busca profunda em todas as pastas via Apps Script
+    const res = await api('searchFiles', { q: query });
+    if (res.success && res.files) {
+      state.files = res.files;
+    } else {
+      // Fallback: filtra localmente o que já está carregado
+      const q = query.toLowerCase();
+      state.files = state.allFiles.filter(f =>
+        f.name.toLowerCase().includes(q) ||
+        (f.uploadedBy || '').toLowerCase().includes(q) ||
+        (f.church || '').toLowerCase().includes(q) ||
+        (f.description || '').toLowerCase().includes(q)
+      );
+    }
+    document.getElementById('foldersSection').style.display = 'none';
+    document.getElementById('currentSectionTitle').textContent = `Resultados para "${query}"`;
+    renderFiles();
+  } catch(e) {
+    toast('Erro na busca', 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
+function searchFiles(query) {
+  // Mantido para compatibilidade — limpa ao apagar tudo
+  if (!query.trim()) clearSearch();
 }
 
 // ====================================================
