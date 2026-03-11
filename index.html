@@ -798,17 +798,32 @@
     }
     .mobile-nav-item.active .mob-dot { opacity: 1; }
 
-    /* Modal full-screen on mobile */
+    /* Modal bottom sheet on mobile */
+    .modal-overlay {
+      align-items: flex-end !important;
+      padding: 0 !important;
+    }
     .modal {
       width: 100vw !important;
-      max-height: 92vh;
+      max-height: 88vh !important;
       border-radius: 20px 20px 0 0 !important;
-      margin-top: auto;
-      margin-bottom: 0;
+      padding: 1.5rem 1.25rem 2rem !important;
+      transform: translateY(100%) !important;
+      transition: transform 0.3s cubic-bezier(0.32,0.72,0,1) !important;
+      margin: 0 !important;
     }
-    .modal-overlay { align-items: flex-end; }
-    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
-    .modal { transform: translateY(40px) scale(1) !important; }
+    .modal-overlay.open .modal {
+      transform: translateY(0) !important;
+    }
+    /* Drag handle */
+    .modal::before {
+      content: '';
+      display: block;
+      width: 40px; height: 4px;
+      background: var(--border2);
+      border-radius: 2px;
+      margin: 0 auto 1.25rem;
+    }
 
     /* Setup notice */
     .setup-notice { padding: 0.75rem 1rem; }
